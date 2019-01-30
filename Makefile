@@ -2,9 +2,10 @@ build:
 	docker build -t assada/zookeeper:latest .
 
 up:
-	docker run --name zoo1 -d --network assada -v $(pwd)/conf:/conf assada/zookeeper:latest
-	docker run --name zoo2 -d --network assada -v $(pwd)/conf:/conf assada/zookeeper:latest
-	docker run --name zoo3 -d --network assada -v $(pwd)/conf:/conf assada/zookeeper:latest
+	echo ${PWD}
+	docker run -p 2181:2181 -e ZOO_MY_ID='1' --name zoo1 -d --network assada -v ${PWD}/conf:/conf assada/zookeeper:latest \
+	&& sleep 2 && docker run -p 2182:2181 -e ZOO_MY_ID='2' --name zoo2 -d --network assada -v ${PWD}/conf:/conf assada/zookeeper:latest \
+	&& sleep 2 && docker run -p 2183:2181 -e ZOO_MY_ID='3' --name zoo3 -d --network assada -v ${PWD}/conf:/conf assada/zookeeper:latest
 
 stop:
 	docker stop zoo3
